@@ -29,16 +29,51 @@ def finishBinaryAdd(remainingBits: List[Boolean], carryBit: Boolean): List[Boole
 def getNextCarryBit(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean = ???
 
 // This function does the binary addition of two Booleans and a carry bit.
-def addBits(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean = ???
+def addBits(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean =
+{
+  pBit && qBit match {
+    case true =>
+    case false =>
+  }
+  pBit && !qBit match {
+    case true =>
+    case false =>
+  }
+
+  !pBit && qBit match {
+    case true =>
+    case false =>
+  }
+
+  !pBit && !qBit match {
+    case true =>
+    case false =>
+  }
+
+}
 
 // This function does the binary addition of two boolean lists. Note that the lists may not be equal in length.
-def doBinaryAddition(pBits: List[Boolean], qBits: List[Boolean], carryBit: Boolean): List[Boolean] = ???
+def doBinaryAddition(pBits: List[Boolean], qBits: List[Boolean], carryBit: Boolean): List[Boolean] =
+{
+  pBits.isEmpty && qBits.nonEmpty && carryBit match {
+    case true => finishBinaryAdd(qBits, carryBit)
+    case false =>
+  }
+  pBits.nonEmpty && qBits.isEmpty && carryBit match {
+    case true => finishBinaryAdd(pBits, carryBit)
+    case false =>
+  }
+  pBits.nonEmpty && qBits.nonEmpty match {
+    case true => addBits(pBits.head, qBits.head, carryBit) :: doBinaryAddition(pBits.tail, qBits.tail, getNextCarryBit(pBits.head, qBits.head, carryBit))
+    case false =>
+  }
+}
 
 // This function converts a binary integer list into its corresponding boolean list.
-def convertIntListToBooleanList(intList: List[Int]) = ???
+def convertIntListToBooleanList(intList: List[Int]) = intList.map { case 1 => true case 0 => false }
 
 // This function converts a boolean list into its corresponding binary integer list.
-def convertBooleanListToIntList(booleanList: List[Boolean]) = ???
+def convertBooleanListToIntList(booleanList: List[Boolean]) = booleanList.map { case true => 1 case false => 0 }
 
 /* This is the "main" function to do binary addition. This function should:
     1. Convert the input parameter lists from integers to boolean. Use Scala reverse
@@ -48,7 +83,15 @@ def convertBooleanListToIntList(booleanList: List[Boolean]) = ???
     5. Convert the answer back to binary integer form for output.
   Note that the initial carry bit is assumed to be 0 (i.e., false).
 */
-def binaryAddition(pList: List[Int], qList: List[Int]) = ???
+def binaryAddition(pList: List[Int], qList: List[Int]) : List[Int] =  {
+  println(pList)
+  println(qList)
+  val list1 : List[Boolean] = convertIntListToBooleanList(pList.reverse)
+  val list2 : List[Boolean] = convertIntListToBooleanList(qList.reverse)
+  val addResult : List[Boolean] = doBinaryAddition(list1,list2, false)
+  val finalResult : List[Int] = convertBooleanListToIntList(addResult.reverse)
+  finalResult
+}
 
 // Testing binary addition.
 if (binaryAddition(pTest1, qTest1).equals(test1ExectedSolution)) println("Test 1 passes!") else println("Test 1 fails.")
