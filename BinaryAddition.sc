@@ -25,17 +25,10 @@ val test4ExectedSolution: List[Int] = List(1, 0, 1, 1, 1, 0, 1)
 // finish the add with the carry bits.
 def finishBinaryAdd(remainingBits: List[Boolean], carryBit: Boolean): List[Boolean] =
 {
-  remainingBits.isEmpty match {
-    case true =>
-        carryBit match {
-        case true => List(true)
-        case false => Nil
-      }
-    case false =>
-        carryBit match {
-      case true => !remainingBits.head :: finishBinaryAdd(remainingBits.tail, remainingBits.head)
-      case false => remainingBits
-    }
+  (remainingBits.isEmpty, carryBit) match {
+  case (true, true) => List(true)
+  case (false, true) => !remainingBits.head :: finishBinaryAdd(remainingBits.tail, remainingBits.head)
+  case (false, false) => remainingBits
   }
 }
 
