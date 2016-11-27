@@ -1,7 +1,7 @@
 // COSC 455 - Programming Languages: Implementation and Design
 // Project 2
 
-// NAME: <Your name here>
+// NAME: M. Alex Boyd
 
 
 // Test Cases
@@ -23,49 +23,39 @@ val test4ExectedSolution: List[Int] = List(1, 0, 1, 1, 1, 0, 1)
 
 // This function does the binary addition when there are uneven lists and still must
 // finish the add with the carry bits.
-def finishBinaryAdd(remainingBits: List[Boolean], carryBit: Boolean): List[Boolean] = ???
-
-// This function determines what the next carry bit should be based on current bits.
-def getNextCarryBit(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean = ???
-
-// This function does the binary addition of two Booleans and a carry bit.
-def addBits(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean =
+def finishBinaryAdd(remainingBits: List[Boolean], carryBit: Boolean): List[Boolean] =
 {
-  pBit && qBit match {
+  remainingBits.isEmpty match {
     case true =>
+        carryBit match {
+        case true => List(true)
+        case false => Nil
+      }
     case false =>
+        carryBit match {
+      case true => !remainingBits.head :: finishBinaryAdd(remainingBits.tail, remainingBits.head)
+      case false => remainingBits
+    }
   }
-  pBit && !qBit match {
-    case true =>
-    case false =>
-  }
-
-  !pBit && qBit match {
-    case true =>
-    case false =>
-  }
-
-  !pBit && !qBit match {
-    case true =>
-    case false =>
-  }
-
 }
 
+// This function determines what the next carry bit should be based on current bits.
+def getNextCarryBit(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean =
+{
+  (pBit && qBit) || (qBit && carryBit) || (pBit && carryBit)
+}
+
+// This function does the binary addition of two Booleans and a carry bit.
+def addBits(pBit: Boolean, qBit: Boolean, carryBit: Boolean): Boolean = {
+  carryBit == (pBit == qBit)
+}
 // This function does the binary addition of two boolean lists. Note that the lists may not be equal in length.
 def doBinaryAddition(pBits: List[Boolean], qBits: List[Boolean], carryBit: Boolean): List[Boolean] =
 {
-  pBits.isEmpty && qBits.nonEmpty && carryBit match {
-    case true => finishBinaryAdd(qBits, carryBit)
-    case false =>
-  }
-  pBits.nonEmpty && qBits.isEmpty && carryBit match {
-    case true => finishBinaryAdd(pBits, carryBit)
-    case false =>
-  }
-  pBits.nonEmpty && qBits.nonEmpty match {
-    case true => addBits(pBits.head, qBits.head, carryBit) :: doBinaryAddition(pBits.tail, qBits.tail, getNextCarryBit(pBits.head, qBits.head, carryBit))
-    case false =>
+  (pBits.isEmpty, qBits.isEmpty, carryBit) match {
+    case (true, false, _) => finishBinaryAdd(qBits, carryBit)
+    case (false, true, _) => finishBinaryAdd(pBits, carryBit)
+    case (false, false, _) => addBits(pBits.head, qBits.head, carryBit) :: doBinaryAddition(pBits.tail, qBits.tail, getNextCarryBit(pBits.head, qBits.head, carryBit))
   }
 }
 
@@ -84,8 +74,6 @@ def convertBooleanListToIntList(booleanList: List[Boolean]) = booleanList.map { 
   Note that the initial carry bit is assumed to be 0 (i.e., false).
 */
 def binaryAddition(pList: List[Int], qList: List[Int]) : List[Int] =  {
-  println(pList)
-  println(qList)
   val list1 : List[Boolean] = convertIntListToBooleanList(pList.reverse)
   val list2 : List[Boolean] = convertIntListToBooleanList(qList.reverse)
   val addResult : List[Boolean] = doBinaryAddition(list1,list2, false)
@@ -94,7 +82,7 @@ def binaryAddition(pList: List[Int], qList: List[Int]) : List[Int] =  {
 }
 
 // Testing binary addition.
-if (binaryAddition(pTest1, qTest1).equals(test1ExectedSolution)) println("Test 1 passes!") else println("Test 1 fails.")
+if (binaryAddition(pTest1, qTest1).equals(test1ExectedSolution)) println("Test 1 passes!") else println("Test 1 fails. " + binaryAddition(pTest1, qTest1))
 if (binaryAddition(pTest2, qTest2).equals(test2ExectedSolution)) println("Test 2 passes!") else println("Test 2 fails.")
 if (binaryAddition(pTest3, qTest3).equals(test3ExectedSolution)) println("Test 3 passes!") else println("Test 3 fails.")
 if (binaryAddition(pTest4, qTest4).equals(test4ExectedSolution)) println("Test 4 passes!") else println("Test 4 fails.")

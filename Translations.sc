@@ -4,10 +4,13 @@ val chinese: List[String] = List("ling", "yi", "er", "san", "si", "wu", "liu", "
 val english: List[String] = List("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten")
 val allLang: List[String] = english ::: chinese
 val mapping = new mutable.HashMap[String, String]()
-
+val English2Num = new mutable.HashMap[String, Int]()
 def initTranslationMap() = {
-  for(i <- 0 to english.size-1)
+  for(i <- 0 to english.size-1) {
     mapping.put(chinese(i), english(i))
+    English2Num.put(english(i), i)
+  }
+
 }
 
 var output : List[Int] = List()
@@ -19,9 +22,9 @@ def go(c : List[String]) : List[Int] = {
     case Nil => Nil
     case head :: tail =>
               if(chinese contains head)
-                output = english2Num(chinese2English(head)) :: output
+                output = English2Num(chinese2English(head)) :: output
               else
-                output = english2Num(head) :: output
+                output = English2Num(head) :: output
               go(tail)
               printedHeaders = true
   }
@@ -33,25 +36,10 @@ def go(c : List[String]) : List[Int] = {
   output
 }
 
-def english2Num (engWord : String ) : Int = {
-  engWord match {
-  case "zero" => 0
-  case "one" => 1
-  case "two" => 2
-  case "three" => 3
-  case "four" => 4
-  case "five" => 5
-  case "six" => 6
-  case "seven" => 7
-  case "eight" => 8
-  case "nine"   => 9
-  case "ten" => 10
-  }
-}
 
 def chinese2English (chineseWord : String) : String = {
   mapping(chineseWord)
 }
 
 
-go(List("yi","nine", "six", "ba", "taco"))
+go(List("zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "tacos"))
